@@ -3,6 +3,8 @@ const Rol = require("../models/rol");
 
 const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
+const storage = require("../utils/cloud_storage");
+
 module.exports = {
   async getAll(req, res, next) {
     try {
@@ -20,6 +22,36 @@ module.exports = {
   async register(req, res, next) {
     try {
       const user = req.body;
+      const data = await User.create(user);
+       await Rol.create(data.id, 1);
+
+      return res.status(201).json({
+        success: true,
+        message: "El registro se realizo correctamente, ahora inicia sesión",
+        data: data.id,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(501).json({
+        success: false,
+        message: "Hubo un error con el registro del usuario",
+        error: error,
+      });
+    }
+  },
+
+  async registerWithImage(req, res, next) {
+    try {
+      const user = JSON.parse(req.body.user);
+      const files = req.files;
+      if (files.length > 0) {
+        const pathImage = `image_${Date.now()}`;
+        const url = await storage(files[0], pathImage);
+        
+        if (url != undefined && url != null) {
+          user.image = url;          
+        }
+      }
       const data = await User.create(user);
        await Rol.create(data.id, 1);
 
