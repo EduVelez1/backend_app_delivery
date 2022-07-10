@@ -19,11 +19,25 @@ module.exports = {
     }
   },
 
+  async findById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const data = await User.findUserByid(id);
+      return res.status(201).json(data);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(502).json({
+        success: false,
+        message: "Error al obtener el usuario por id",
+      });
+    }
+  },
+
   async register(req, res, next) {
     try {
       const user = req.body;
       const data = await User.create(user);
-       await Rol.create(data.id, 1);
+      await Rol.create(data.id, 1);
 
       return res.status(201).json({
         success: true,
@@ -47,13 +61,13 @@ module.exports = {
       if (files.length > 0) {
         const pathImage = `image_${Date.now()}`;
         const url = await storage(files[0], pathImage);
-        
+
         if (url != undefined && url != null) {
-          user.image = url;          
+          user.image = url;
         }
       }
       const data = await User.create(user);
-       await Rol.create(data.id, 1);
+      await Rol.create(data.id, 1);
 
       return res.status(201).json({
         success: true,
@@ -65,6 +79,34 @@ module.exports = {
       return res.status(501).json({
         success: false,
         message: "Hubo un error con el registro del usuario",
+        error: error,
+      });
+    }
+  },
+
+  async update(req, res, next) {
+    try {
+      const user = JSON.parse(req.body.user);
+      const files = req.files;
+      if (files.length > 0) {
+        const pathImage = `image_${Date.now()}`;
+        const url = await storage(files[0], pathImage);
+
+        if (url != undefined && url != null) {
+          user.image = url;
+        }
+      }
+      await User.update(user);
+
+      return res.status(201).json({
+        success: true,
+        message: "Los datos del usuario se actualizaron correctamente",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(501).json({
+        success: false,
+        message: "Hubo un error con la actualizacion de datos del usuario",
         error: error,
       });
     }
@@ -99,8 +141,11 @@ module.exports = {
           phone: user.phone,
           image: user.image,
           session_token: `JWT ${token}`,
-          roles: user.roles
+          roles: user.roles,
         };
+
+        await User.updateToken(user.id, `JWT ${token}`);
+
         return res.status(201).json({
           success: true,
           data: dataUser,

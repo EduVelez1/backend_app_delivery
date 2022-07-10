@@ -35,13 +35,13 @@ CREATE TABLE users_has_roles(
 
 
 INSERT INTO public.roles(
-	name, route, created_at, updated_at)
-	VALUES ('CLIENTE', 'client/products/list', '2022-06-16', '2022-06-16');
+	name, image, route, created_at, updated_at)
+	VALUES ('CLIENTE',  'assets/img/cliente.png', 'client/products/list', '2022-06-16', '2022-06-16');
 	
 INSERT INTO public.roles(
-	name, route, created_at, updated_at)
-	VALUES ('PROPIETARIO', 'stores/orders/list', '2022-06-16', '2022-06-16');
+	name, image, route, created_at, updated_at)
+	VALUES ('PROPIETARIO', 'assets/img/tienda.png', 'stores/orders/list', '2022-06-16', '2022-06-16');
 	
 INSERT INTO public.roles(
-	name, route, created_at, updated_at)
-	VALUES ('REPARTIDOR', 'delivery/orders/list', '2022-06-16', '2022-06-16');
+	name, image, route, created_at, updated_at)
+	VALUES ('REPARTIDOR', 'assets/img/delivery2.png', 'delivery/orders/list', '2022-06-16', '2022-06-16');
