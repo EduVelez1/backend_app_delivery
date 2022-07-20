@@ -33,6 +33,41 @@ CREATE TABLE users_has_roles(
 	PRIMARY KEY(id_user, id_rol)
 );
 
+CREATE TABLE categories(
+	id BIGSERIAL PRIMARY KEY,
+	name VARCHAR(180) NOT NULL UNIQUE,
+	description VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL
+);
+
+CREATE TABLE products(
+	id BIGSERIAL PRIMARY KEY,
+	name VARCHAR(180) NOT NULL UNIQUE,
+	description VARCHAR(255) NOT NULL,
+	price decimal default 0 NOT NULL,
+	image1 VARCHAR(255) NULL,
+	image2 VARCHAR(255) NULL,
+	image3 VARCHAR(255) NULL,
+	id_category BIGINT NOT NULL,
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+	FOREIGN KEY(id_category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+CREATE TABLE address(
+	id BIGSERIAL PRIMARY KEY,
+	id_user BIGINT NOT NULL,	
+	address VARCHAR(255) NOT NULL,
+	detail VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+	FOREIGN KEY(id_user) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+
 
 INSERT INTO public.roles(
 	name, image, route, created_at, updated_at)
