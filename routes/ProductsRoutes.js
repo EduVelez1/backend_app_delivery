@@ -5,6 +5,11 @@ module.exports = (app, upload) => {
     ProductsController.findByCategory
   );
 
+  app.get(
+    "/api/products/findByCategoryAndProductName/:id_category/:product_name",
+    ProductsController.findByCategoryAndProductName
+  );
+
   app.post(
     "/api/products/create",
     upload.array("image", 3),

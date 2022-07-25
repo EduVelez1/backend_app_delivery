@@ -23,6 +23,28 @@ C.id = $1`;
   return db.manyOrNone(sql, id_category);
 };
 
+Products.findByCategoryAndProductName = (id_category, product_name) => {
+  const sql = `SELECT
+	P.id,
+	P.name,
+	P.description,
+	P.price,
+	P.image1,
+	P.image2,
+	P.image3,
+	P.id_category
+FROM
+	products AS P
+INNER JOIN
+	categories AS C
+ON
+	P.id_Category = C.id
+WHERE 
+C.id = $1 AND P.name ILIKE $2`;
+
+  return db.manyOrNone(sql, [id_category, `%${product_name}%`]);
+};
+
 Products.create = (products) => {
   const sql = `INSERT INTO products(name, description, price, image1, image2, image3, id_category, created_at, updated_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`;

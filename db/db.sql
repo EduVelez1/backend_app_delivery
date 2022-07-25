@@ -68,6 +68,34 @@ CREATE TABLE address(
 );
 
 
+CREATE TABLE orders(
+	id BIGSERIAL PRIMARY KEY,
+	id_client BIGINT NOT NULL,	
+	id_delivery BIGINT NULL,	
+	id_address BIGINT NOT NULL,	
+	status VARCHAR(100) NOT NULL,
+	timestamp BIGINT NOT NULL,	
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+	FOREIGN KEY(id_client) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(id_delivery) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(id_address) REFERENCES address(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+CREATE TABLE order_has_products(
+	id_order BIGSERIAL,
+	id_product BIGINT NOT NULL,	
+	quantity BIGINT NOT NULL,	
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+	PRIMARY KEY(id_order, id_product),
+	FOREIGN KEY(id_order) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(id_product) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+);
+
+
 
 INSERT INTO public.roles(
 	name, image, route, created_at, updated_at)

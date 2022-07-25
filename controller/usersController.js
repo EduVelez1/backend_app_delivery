@@ -4,6 +4,7 @@ const Rol = require("../models/rol");
 const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
 const storage = require("../utils/cloud_storage");
+const { findDeliveryMen } = require("../models/user");
 
 module.exports = {
   async getAll(req, res, next) {
@@ -15,6 +16,19 @@ module.exports = {
       return res.status(502).json({
         success: false,
         message: "Error al obtener los usuarios",
+      });
+    }
+  },
+
+  async findDeliveryMen(req, res, next) {
+    try {
+      const data = await User.findDeliveryMen();
+      return res.status(201).json(data);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(502).json({
+        success: false,
+        message: "Error al obtener los repartidores",
       });
     }
   },
